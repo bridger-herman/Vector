@@ -11,6 +11,7 @@ Available operations include:
 + Projection
 + Unit Vectors
 + Angle Between Vectors
+
 Determine if two vectors are:
 + Parallel
 + Orthogonal
