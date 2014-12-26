@@ -3,7 +3,7 @@ Vectors
 
 A class for vector oprerations, made in Python 3.
 
-Available operations include:
+## Available operations include: ##
 + Cross Product
 + Dot Product
 + Scalar Multiplication
@@ -12,7 +12,7 @@ Available operations include:
 + Unit Vectors
 + Angle Between Vectors
 
-Determine if two vectors are:
+## Determine if two vectors are: ##
 + Parallel
 + Orthogonal
 + Distinct
