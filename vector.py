@@ -1,4 +1,6 @@
 import math
+from draw import *
+
 class Vector3():
         def __init__(self, x = 0, y = 0, z = 0, mode = True):
                 self.__x = x
@@ -144,6 +146,29 @@ class Vector3():
                         final_str += "k"
                 return final_str
                 
+        def plot(self, axis):
+                axis.t.up()
+                # Go to x coordinate
+                axis.t.left(45)
+                axis.t.backward(axis.scale[0] * self.get_x())
+                # Go to y coordinate
+                axis.t.right(45)
+                axis.t.forward(axis.scale[1] * self.get_y())
+                # Go to z coordinate
+                axis.t.left(90)
+                axis.t.forward(axis.scale[2] * self.get_z())
+                # Draw arrow
+                axis.t.down()
+                pos = axis.t.position()
+                heading = math.degrees(math.atan(pos[1] / pos[0]))
+                axis.t.setheading(heading + 45)
+                axis.t.forward(6)
+                axis.t.goto(*pos)
+                axis.t.setheading(heading - 45)
+                axis.t.forward(6)
+                axis.t.goto(*pos)
+                axis.t.goto(0, 0)
+                
         def get_values(self):
                 return self.__values
         def get_mode(self):
@@ -156,6 +181,31 @@ class Vector3():
                 return self.__z
 
 
-i = Vector3(1,2,3)
+i = Vector3(5,2,3)
 j = Vector3(4,5,6)
-print(i)
+a = Axis(200)
+i.plot(a)
+input()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
