@@ -14,9 +14,6 @@ class Draw():
                 # Draw the y axis
                 self.__t.color("#00aa00")
                 self.__t.forward(self.__size)
-                self.__t.up()
-                self.__t.forward(self.__size // 10)
-                self.__t.down()
                 self.__t.write(str(self.__max[1]) + "  +y")
                 self.__t.goto(0, 0)
                 self.__t.backward(self.__size)
@@ -26,9 +23,6 @@ class Draw():
                 self.__t.color("#0000aa")
                 self.__t.left(90)
                 self.__t.forward(self.__size)
-                self.__t.up()
-                self.__t.forward(self.__size // 10)
-                self.__t.down()
                 self.__t.write(str(self.__max[2]) + "  +z")
                 self.__t.goto(0, 0)
                 self.__t.backward(self.__size)
@@ -40,9 +34,6 @@ class Draw():
                 self.__t.forward(self.__size)
                 self.__t.goto(0, 0)
                 self.__t.backward(self.__size)
-                self.__t.up()
-                self.__t.backward(self.__size // 10)
-                self.__t.down()
                 self.__t.write(str(self.__max[0]) + "  +x")
                 
                 # Reset so turtle is at (0, 0), facing positive y axis, and black-colored
