@@ -1,6 +1,6 @@
 Vector
 =======
-A project for 3 Dimensional vector oprerations and visualization, made in Python 3.
+A project for 3 Dimensional vector operations and visualization, made in Python 3.
 ## Vector Operations ##
 ### Available operations include: ###
 + Cross (Vector) Product `u.cross(v)`
@@ -17,7 +17,7 @@ A project for 3 Dimensional vector oprerations and visualization, made in Python
 + Orthogonal
 + Distinct
 ## Vector Visualization (3D) ##
-+ Creating the 3D axis
-+ Setting the scale of said axis
++ Creating the 3D axes
++ Setting the minima and maxima of said axes
 + Plotting points
 + Plotting vectors

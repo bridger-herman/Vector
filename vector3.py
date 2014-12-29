@@ -196,76 +196,101 @@ class Vector3():
 # + Plotting of points
 # + Plotting of vectors
 class Axis3():
-        def __init__(self, size = 200, max_x = 5, max_y = 5, max_z = 5):
-                self.__size = size
+        def __init__(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5)):
                 self.t = turtle.Turtle()
+                self.s = turtle.Screen()
+                self.s.screensize(1920,1040)
+                self.s.title("Vector3D")
                 self.t.ht()
                 self.t.speed(0)
-                self.maxm = (5, 5, 5)
+                self.objects = []
+                # (Minimum, Maximum) for each axis
+                self.maxm = ((-5, 5), (-5, 5), (-5, 5))
                 # Number of pixels per unit
-                self.scale = (20, 20, 20)
-                self.setscale(max_x, max_y, max_z)
+                self.scale = 40
+                self.setscale(*self.maxm)
                 self.drawaxis()
         
         # Draw Axis
         # Draws the 3 dimensional axis, with labels for xyz and their maxima
         # Takes: an axis object
         # Returns: None
-        #TODO add redraw function
         def drawaxis(self):
                 # Draw the y axis
                 self.t.color("#00aa00")
-                self.t.forward(self.__size)
+                self.t.forward(int(self.scale * self.maxm[1][1]))  # y axis maximum
                 self.t.up()
-                self.t.forward(self.__size // 10)
+                self.t.forward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[1]) + "  +y")
+                self.t.write(str(self.maxm[1][1]) + "  [+y]")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
-                self.t.backward(self.__size)
+                self.t.forward(int(self.scale * self.maxm[1][0]))  # y axis minimum
+                self.t.up()
+                self.t.backward(self.scale)
+                self.t.down()
+                self.t.write(str(self.maxm[1][0]) + "  [-y]")
                 self.t.up()
                 self.t.goto(0, 0)
+                self.t.down()
                 # Draw the z axis
-                self.t.down()
                 self.t.color("#0000aa")
                 self.t.left(90)
-                self.t.forward(self.__size)
+                self.t.forward(int(self.scale * self.maxm[2][1]))  # z axis maximum
                 self.t.up()
-                self.t.forward(self.__size // 10)
+                self.t.forward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[2]) + "  +z")
+                self.t.write(str(self.maxm[2][1]) + "  [+z]")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
-                self.t.backward(self.__size)
+                self.t.forward(int(self.scale * self.maxm[2][0]))  # z axis minimum
+                self.t.up()
+                self.t.backward(self.scale)
+                self.t.down()
+                self.t.write(str(self.maxm[2][0]) + "  [-z]")
                 self.t.up()
                 self.t.goto(0, 0)
+                self.t.down()
                 # Draw the x axis
-                self.t.down()
                 self.t.color("#aa0000")
-                self.t.right(45)
-                self.t.forward(self.__size)
-                self.t.goto(0, 0)
-                self.t.backward(self.__size)
+                self.t.right(225)
+                self.t.forward(int(self.scale * self.maxm[0][1]))  # x axis maximum
                 self.t.up()
-                self.t.backward(self.__size // 10)
+                self.t.forward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[0]) + "  +x")
+                self.t.write(str(self.maxm[0][1]) + "  [+x]")
+                self.t.up()
+                self.t.goto(0, 0)
+                self.t.down()
+                self.t.forward(int(self.scale * self.maxm[0][0]))  # x axis minimum
+                self.t.up()
+                self.t.backward(self.scale)
+                self.t.down()
+                self.t.write(str(self.maxm[0][0]) + "  [-x]")
                 self.resetpos()
+                
+        # Redraw
+        # Redraws the axis, with all the current vectors and points
+        # Takes: None
+        # Returns: None
+        def redraw(self):
+                self.t.clear()
+                self.drawaxis()
+                #TODO after plot() is condensed, make this general
+                for vec in self.objects:
+                        self.plotvector(vec)
         
         # Set Scale
         # Sets the scale of the 3D axis (number of pixels per unit)
-        # Takes: max_x, max_y, max_z (the maximum desired value of each axis)
+        # Takes: xm, ym, zm the (minimum, maximum) of each axis
         # Returns: None
-        def setscale(self, max_x = 5, max_y = 5, max_z = 5):
-                xs = self.__size // max_x
-                ys = self.__size // max_y
-                zs = self.__size // max_z
-                self.maxm = (max_x, max_y, max_z)
-                self.scale = (xs, ys, zs)
+        def setscale(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5)):
+                self.maxm = (xm, ym, zm)
         
         #TODO add comment
+        #TODO condense plotpoint and plotvector into one method, plot
         def plotpoint(self, point = (0,0,0)):
                 self.t.up()
                 # Go to x coordinate
@@ -290,33 +315,43 @@ class Axis3():
         # Plots a vector on the 3D axis
         # Takes: a vector object
         # Returns: None
-        #TODO finish autoscaling axes
-        #TODO add a list with current objects on axis, for redrawing
+        #TODO guides on/off (gray color or nothing)
         def plotvector(self, vector = Vector3(1,1,1)):
-                i = 0
-                newscale = []
+                if vector not in self.objects:
+                        self.objects.append(vector)
+                nmax = []
+                nmin = []
                 vals = vector.get_values()
+                i = 0
                 while i < len(vals):
-                        if vals[i] > self.maxm[i]:
-                                newscale.append(vals[i])
+                        if vals[i] > self.maxm[i][1]:
+                                nmax.append(vals[i])
                         else:
-                                newscale.append(self.maxm[i])
+                                nmax.append(self.maxm[i][1])
+                        if vals[i] < self.maxm[i][0]:
+                                nmin.append(vals[i])
+                        else:
+                                nmin.append(self.maxm[i][0])
                         i += 1
-                print(vals)
-                print(newscale)
-                self.setscale(*newscale)
-                self.t.up()
+                nmaxm = []
+                nmaxm.append((nmin[0], nmax[0]))
+                nmaxm.append((nmin[1], nmax[1]))
+                nmaxm.append((nmin[2], nmax[2]))
+                if tuple(nmaxm) != self.maxm:
+                        self.setscale(*nmaxm)
+                        self.redraw()
+                self.t.color("#bbbbbb")
                 # Go to x coordinate
                 self.t.left(45)
-                self.t.backward(self.scale[0] * vector.get_x())
+                self.t.backward(self.scale * vector.get_x())
                 # Go to y coordinate
                 self.t.right(45)
-                self.t.forward(self.scale[1] * vector.get_y())
+                self.t.forward(self.scale * vector.get_y())
                 # Go to z coordinate
                 self.t.left(90)
-                self.t.forward(self.scale[2] * vector.get_z())
+                self.t.forward(self.scale * vector.get_z())
                 # Draw arrow
-                self.t.down()
+                self.t.color("#000000")
                 pos = self.t.position()
                 heading = math.degrees(math.atan(pos[1] / pos[0]))
                 # Fixes arrow head direction on positive x values
@@ -352,5 +387,4 @@ a = Axis3()
 a.plotvector(i)
 a.plotvector(j)
 a.plotvector(k)
-print(k.mag())
 input()
