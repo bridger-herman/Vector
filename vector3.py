@@ -1,6 +1,37 @@
 import math
 import turtle
 
+# 3 Dimensional Point Class
+# Digital representation of points in space
+# Available operations:
+# + Distance Between Points `p.distance(q)`
+class Point3():
+        def __init__(self, x = 0, y = 0, z = 0):
+                self.__x = x
+                self.__y = y
+                self.__z = z
+                self.__values = (self.__x, self.__y, self.__z)
+        
+        # Distance
+        # Determines the distance between two points
+        # Takes: self, other; both Point3 objects
+        # Returns: a scalar value
+        def distance(self, other):
+                dx = other.get_x() - self.get_x()
+                dy = other.get_y() - self.get_y()
+                dz = other.get_z() - self.get_z()
+                dis = (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
+                return dis
+        
+        def get_values(self):
+                return self.__values
+        def get_x(self):
+                return self.__x
+        def get_y(self):
+                return self.__y
+        def get_z(self):
+                return self.__z
+                
 # 3 Dimensional Vector Class
 # Digital representation of mathematical vectors
 # Available operations:
@@ -24,8 +55,8 @@ class Vector3():
         
         # Cross Product
         # Performs the cross product self x other
-        # Takes: a vector object, another vector object
-        # Returns: a vector object
+        # Takes: self, other; Vector3 objects
+        # Returns: Vector3 object
         def cross(self, other):
                 new_x = self.get_y() * other.get_z() - self.get_z() * other.get_y()
                 new_y = self.get_z() * other.get_x() - self.get_x() * other.get_z()
@@ -34,8 +65,8 @@ class Vector3():
         
         # Dot Product
         # Performs the dot product self . other
-        # Takes: a vector object, another vector object
-        # Returns: a scalar value
+        # Takes: self, other; Vector3 objects
+        # Returns: Vector3 object
         def dot(self, other):
                 new_values = []
                 i = 0
@@ -46,8 +77,8 @@ class Vector3():
         
         # Vector Addition
         # Adds self and other
-        # Takes: self and other, both vector objects
-        # Returns: vector object
+        # Takes: self, other; Vector3 objects
+        # Returns: Vector3 object
         def __add__(self, other):
                 nx = self.get_x() + other.get_x()
                 ny = self.get_y() + other.get_y()
@@ -56,8 +87,8 @@ class Vector3():
 
         # Vector Subtraction
         # Subtracts other from self
-        # Takes: self and other, both vector objects
-        # Returns: vector object
+        # Takes: self, other; Vector3 objects
+        # Returns: Vector3 object
         def __sub__(self, other):
                 nx = self.get_x() - other.get_x()
                 ny = self.get_y() - other.get_y()
@@ -66,8 +97,10 @@ class Vector3():
         
         # Scalar Multiplication
         # Performs scalar multiplication of self * scalar
-        # Takes: a vector object, a scalar to multiply the vector by
-        # Returns: a vector object
+        # Takes: 
+        # + self; Vector3 object
+        # + scalar; float/int; a scalar value to divide the vector by
+        # Returns: Vector3 object
         def __mul__(self, scalar):
                 new_values = []
                 for value in self.get_values():
@@ -76,15 +109,19 @@ class Vector3():
                 
         # Scalar True Division
         # Performs scalar true division of self / scalar
-        # Takes: a vector object, a scalar value to divide the vector by
-        # Returns: a vector object
+        # Takes: 
+        # + self; Vector3 object
+        # + scalar; integer; a scalar value to divide the vector by
+        # Returns: Vector3 object
         def __truediv__(self, scalar):
                 return self * (1 / scalar)
                 
         # Magnitude
         # Gets the magnitude of a vector
-        # Takes: a vector object, format parameter (whether or not to format the output nicely)
-        # Returns: a scalar value
+        # Takes: 
+        # + self; Vector3 object
+        # + fmt; integer; format parameter (whether or not to format the output nicely)
+        # Returns: float/int
         def mag(self, fmt = False):
                 mag_squared = self.get_x() ** 2 + self.get_y() ** 2 + self.get_z() ** 2
                 mag = mag_squared ** 0.5
@@ -95,8 +132,8 @@ class Vector3():
         
         # Projection
         # Gets the value proj _other_ (self)
-        # Takes: a vector object, another vector object
-        # Returns: a vector object
+        # Takes: self, other; Vector3 objects
+        # Returns: Vector3 object
         def proj(self, other):
                 dot = self.dot(other)
                 mag_2 = other.mag() ** 2
@@ -105,15 +142,17 @@ class Vector3():
                 
         # Unit Vector
         # Gets the unit vector of self
-        # Takes: a vector object
-        # Returns: a vector object
+        # Takes: Vector3 object
+        # Returns: Vector3 object
         def unit(self):
                 return self / self.mag()
                 
         # Angle
         # Gets the angle between self and other
-        # Takes: a vector object, another vector object, boolean of degrees/radians
-        # Returns: a scalar value
+        # Takes:
+        # + self, other; Vector3 objects
+        # + radians; boolean
+        # Returns: float/int
         def angle(self, other, radians = True):
                 dot = self.dot(other)
                 mag_s = self.mag()
@@ -127,6 +166,7 @@ class Vector3():
                         
         # Parallel
         # Determines if self and other are parallel
+        # Takes: self, other; Vector3 objects
         # Returns: boolean
         def parallel(self, other):
                 x = self.get_x() / other.get_x()
@@ -139,6 +179,7 @@ class Vector3():
                         
         # Orthogonal
         # Determines if self and other are orthogonal
+        # Takes: self, other; Vector3 objects
         # Returns: boolean
         def orthogonal(self, other):
                 dot = self.dot(other)
@@ -149,6 +190,7 @@ class Vector3():
         
         # Distinct
         # Determines if self and other are distinct vectors
+        # Takes: self, other; Vector3 objects
         # Returns: boolean
         def distinct(self, other):
                 if self.get_x() == other.get_x() and self.get_y() == other.get_y() and self.get_z() == other.get_z():
@@ -157,7 +199,7 @@ class Vector3():
                         return True
         
         # Reproduce
-        # Takes: a vector object
+        # Takes: self; Vector3 object
         # Returns: a string dependant upon the user's choice of angle brackets or ijk notation
         def __repr__(self):
                 final_str = ""
@@ -196,11 +238,12 @@ class Vector3():
 # + Plotting of points
 # + Plotting of vectors
 class Axis3():
-        def __init__(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5)):
+        def __init__(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5), guides = True):
                 self.t = turtle.Turtle()
                 self.s = turtle.Screen()
                 self.s.screensize(1920,1040)
                 self.s.title("Vector3D")
+                self.guides = guides
                 self.t.ht()
                 self.t.speed(0)
                 self.objects = []
@@ -213,7 +256,7 @@ class Axis3():
         
         # Draw Axis
         # Draws the 3 dimensional axis, with labels for xyz and their maxima
-        # Takes: an axis object
+        # Takes: Axis3 object
         # Returns: None
         def drawaxis(self):
                 # Draw the y axis
@@ -272,56 +315,32 @@ class Axis3():
                 self.resetpos()
                 
         # Redraw
-        # Redraws the axis, with all the current vectors and points
-        # Takes: None
+        # Redraws the axis, with all the current Vector3s and Point3s
+        # Takes: Vector3 or Point3 object
         # Returns: None
         def redraw(self):
                 self.t.clear()
                 self.drawaxis()
-                #TODO after plot() is condensed, make this general
-                for vec in self.objects:
-                        self.plotvector(vec)
+                for obj in self.objects:
+                        self.plot(obj)
         
         # Set Scale
         # Sets the scale of the 3D axis (number of pixels per unit)
-        # Takes: xm, ym, zm the (minimum, maximum) of each axis
+        # Takes: xm, ym, zm; ints; the (minimum, maximum) of each axis
         # Returns: None
         def setscale(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5)):
                 self.maxm = (xm, ym, zm)
         
-        #TODO add comment
-        #TODO condense plotpoint and plotvector into one method, plot
-        def plotpoint(self, point = (0,0,0)):
-                self.t.up()
-                # Go to x coordinate
-                self.t.left(45)
-                self.t.backward(self.scale[0] * point[0])
-                # Go to y coordinate
-                self.t.right(45)
-                self.t.forward(self.scale[1] * point[1])
-                # Go to z coordinate
-                self.t.left(90)
-                self.t.forward(self.scale[2] * point[2])
-                # Draw point
-                self.t.setheading(0)
-                self.t.forward(2)
-                self.t.setheading(90)
-                self.t.down()
-                self.t.begin_fill()
-                self.t.circle(2)
-                self.t.end_fill()
-        
         # Plot
-        # Plots a vector on the 3D axis
-        # Takes: a vector object
+        # Plots a Vector3 or a Point3 on the 3D axis
+        # Takes: Vector3 or Point3 object
         # Returns: None
-        #TODO guides on/off (gray color or nothing)
-        def plotvector(self, vector = Vector3(1,1,1)):
-                if vector not in self.objects:
-                        self.objects.append(vector)
+        def plot(self, obj = None):
+                if obj not in self.objects:
+                        self.objects.append(obj)
                 nmax = []
                 nmin = []
-                vals = vector.get_values()
+                vals = obj.get_values()
                 i = 0
                 while i < len(vals):
                         if vals[i] > self.maxm[i][1]:
@@ -340,51 +359,73 @@ class Axis3():
                 if tuple(nmaxm) != self.maxm:
                         self.setscale(*nmaxm)
                         self.redraw()
-                self.t.color("#bbbbbb")
+                if self.guides:
+                        self.t.color("#bbbbbb")
+                else:
+                        self.t.up()
                 # Go to x coordinate
                 self.t.left(45)
-                self.t.backward(self.scale * vector.get_x())
+                self.t.backward(self.scale * obj.get_x())
                 # Go to y coordinate
                 self.t.right(45)
-                self.t.forward(self.scale * vector.get_y())
+                self.t.forward(self.scale * obj.get_y())
                 # Go to z coordinate
                 self.t.left(90)
-                self.t.forward(self.scale * vector.get_z())
-                # Draw arrow
-                self.t.color("#000000")
-                pos = self.t.position()
-                heading = math.degrees(math.atan(pos[1] / pos[0]))
-                # Fixes arrow head direction on positive x values
-                if pos[0] <= 0:
-                        arrow = 45
-                elif pos[0] == 0 and pos[1] <= 0:
-                        arrow = 135
+                self.t.forward(self.scale * obj.get_z())
+                if self.guides:
+                        self.t.color("#000000")
                 else:
-                        arrow = 135
-                self.t.setheading(heading + arrow)
-                self.t.forward(6)
-                self.t.goto(*pos)
-                self.t.setheading(heading - arrow)
-                self.t.forward(6)
-                self.t.goto(*pos)
-                self.t.goto(0, 0)
+                        self.t.down()
+                # Draw arrow if Vector3
+                if type(obj) == type(Vector3()):
+                        pos = self.t.position()
+                        heading = math.degrees(math.atan(pos[1] / pos[0]))
+                        # Fixes arrow head direction on positive x (2D) values
+                        if pos[0] <= 0:
+                                arrow = 45
+                        elif pos[0] == 0 and pos[1] <= 0:
+                                arrow = 135
+                        else:
+                                arrow = 135
+                        self.t.setheading(heading + arrow)
+                        self.t.forward(6)
+                        self.t.goto(*pos)
+                        self.t.setheading(heading - arrow)
+                        self.t.forward(6)
+                        self.t.goto(*pos)
+                        self.t.goto(0, 0)
+                # Draw circle if Point3
+                elif type(obj) == type(Point3()):
+                        self.t.setheading(0)
+                        self.t.forward(2)
+                        self.t.setheading(90)
+                        self.t.down()
+                        self.t.begin_fill()
+                        self.t.circle(2)
+                        self.t.end_fill()
                 self.resetpos()
         
+        # Reset Position
+        # Reset so turtle is at (0, 0), facing positive y axis, and black-colored
+        # Takes: a Turtle object
+        # Returns: None
         def resetpos(self):
-                # Reset so turtle is at (0, 0), facing positive y axis, and black-colored
                 self.t.color("#000000")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.setheading(0)
                 self.t.down()
         
+#TODO add parametric vector class (above Axis3())
 
 
 i = Vector3(5,3,1)
 j = Vector3(1,2,3)
 k = i.cross(j)
+p = Point3(1,1,1)
 a = Axis3()
-a.plotvector(i)
-a.plotvector(j)
-a.plotvector(k)
+a.plot(i)
+a.plot(j)
+a.plot(k)
+a.plot(p)
 input()
