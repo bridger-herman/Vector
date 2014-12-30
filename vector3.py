@@ -6,11 +6,11 @@ import turtle
 # Available operations:
 # + Distance Between Points `p.distance(q)`
 class Point3():
-        def __init__(self, x = 0, y = 0, z = 0):
-                self.__x = x
-                self.__y = y
-                self.__z = z
-                self.__values = (self.__x, self.__y, self.__z)
+        def __init__(self, p = (0, 0, 0)):
+                self.__x = p[0]
+                self.__y = p[1]
+                self.__z = p[2]
+                self.__values = p
         
         # Distance
         # Determines the distance between two points
@@ -31,7 +31,7 @@ class Point3():
                 return self.__y
         def get_z(self):
                 return self.__z
-                
+
 # 3 Dimensional Vector Class
 # Digital representation of mathematical vectors
 # Available operations:
@@ -42,12 +42,13 @@ class Point3():
 # + Projection `u.proj(v)`
 # + Unit Vectors `u.unit()`
 # + Angle Between Vectors `u.angle(v)`
-class Vector3():
-        def __init__(self, x = 0, y = 0, z = 0, mode = True):
-                self.__x = x
-                self.__y = y
-                self.__z = z
-                self.__values = (self.__x, self.__y, self.__z)
+#TODO add description to all initializers
+class Vec3D():
+        def __init__(self, p = (1, 1, 1), mode = True):
+                self.__x = p[0]
+                self.__y = p[1]
+                self.__z = p[2]
+                self.__values = p
                 # If vector is displayed in angle brackets or ijk notation
                 # True: angle brackets
                 # False: ijk notation
@@ -55,18 +56,18 @@ class Vector3():
         
         # Cross Product
         # Performs the cross product self x other
-        # Takes: self, other; Vector3 objects
-        # Returns: Vector3 object
+        # Takes: self, other; Vec3D objects
+        # Returns: Vec3D object
         def cross(self, other):
                 new_x = self.get_y() * other.get_z() - self.get_z() * other.get_y()
                 new_y = self.get_z() * other.get_x() - self.get_x() * other.get_z()
                 new_z = self.get_x() * other.get_y() - self.get_y() * other.get_x()
-                return Vector3(new_x, new_y, new_z, mode = self.get_mode())
+                return Vec3D((new_x, new_y, new_z), mode = self.get_mode())
         
         # Dot Product
         # Performs the dot product self . other
-        # Takes: self, other; Vector3 objects
-        # Returns: Vector3 object
+        # Takes: self, other; Vec3D objects
+        # Returns: Vec3D object
         def dot(self, other):
                 new_values = []
                 i = 0
@@ -77,49 +78,49 @@ class Vector3():
         
         # Vector Addition
         # Adds self and other
-        # Takes: self, other; Vector3 objects
-        # Returns: Vector3 object
+        # Takes: self, other; Vec3D objects
+        # Returns: Vec3D object
         def __add__(self, other):
                 nx = self.get_x() + other.get_x()
                 ny = self.get_y() + other.get_y()
                 nz = self.get_z() + other.get_z()
-                return Vector3(nx, ny, nz)
+                return Vec3D((nx, ny, nz))
 
         # Vector Subtraction
         # Subtracts other from self
-        # Takes: self, other; Vector3 objects
-        # Returns: Vector3 object
+        # Takes: self, other; Vec3D objects
+        # Returns: Vec3D object
         def __sub__(self, other):
                 nx = self.get_x() - other.get_x()
                 ny = self.get_y() - other.get_y()
                 nz = self.get_z() - other.get_z()
-                return Vector3(nx, ny, nz)
+                return Vec3D((nx, ny, nz))
         
         # Scalar Multiplication
         # Performs scalar multiplication of self * scalar
         # Takes: 
-        # + self; Vector3 object
+        # + self; Vec3D object
         # + scalar; float/int; a scalar value to divide the vector by
-        # Returns: Vector3 object
+        # Returns: Vec3D object
         def __mul__(self, scalar):
                 new_values = []
                 for value in self.get_values():
                         new_values.append(value * scalar)
-                return Vector3(*new_values, mode = self.get_mode())
+                return Vec3D(new_values, mode = self.get_mode())
                 
         # Scalar True Division
         # Performs scalar true division of self / scalar
         # Takes: 
-        # + self; Vector3 object
+        # + self; Vec3D object
         # + scalar; integer; a scalar value to divide the vector by
-        # Returns: Vector3 object
+        # Returns: Vec3D object
         def __truediv__(self, scalar):
                 return self * (1 / scalar)
                 
         # Magnitude
         # Gets the magnitude of a vector
         # Takes: 
-        # + self; Vector3 object
+        # + self; Vec3D object
         # + fmt; integer; format parameter (whether or not to format the output nicely)
         # Returns: float/int
         def mag(self, fmt = False):
@@ -132,25 +133,25 @@ class Vector3():
         
         # Projection
         # Gets the value proj _other_ (self)
-        # Takes: self, other; Vector3 objects
-        # Returns: Vector3 object
+        # Takes: self, other; Vec3D objects
+        # Returns: Vec3D object
         def proj(self, other):
                 dot = self.dot(other)
                 mag_2 = other.mag() ** 2
                 vec = other * (dot / mag_2)
-                return Vector3(*vec.get_values())
+                return Vec3D(vec.get_values())
                 
         # Unit Vector
         # Gets the unit vector of self
-        # Takes: Vector3 object
-        # Returns: Vector3 object
+        # Takes: Vec3D object
+        # Returns: Vec3D object
         def unit(self):
                 return self / self.mag()
                 
         # Angle
         # Gets the angle between self and other
         # Takes:
-        # + self, other; Vector3 objects
+        # + self, other; Vec3D objects
         # + radians; boolean
         # Returns: float/int
         def angle(self, other, radians = True):
@@ -166,7 +167,7 @@ class Vector3():
                         
         # Parallel
         # Determines if self and other are parallel
-        # Takes: self, other; Vector3 objects
+        # Takes: self, other; Vec3D objects
         # Returns: boolean
         def parallel(self, other):
                 x = self.get_x() / other.get_x()
@@ -179,7 +180,7 @@ class Vector3():
                         
         # Orthogonal
         # Determines if self and other are orthogonal
-        # Takes: self, other; Vector3 objects
+        # Takes: self, other; Vec3D objects
         # Returns: boolean
         def orthogonal(self, other):
                 dot = self.dot(other)
@@ -190,7 +191,7 @@ class Vector3():
         
         # Distinct
         # Determines if self and other are distinct vectors
-        # Takes: self, other; Vector3 objects
+        # Takes: self, other; Vec3D objects
         # Returns: boolean
         def distinct(self, other):
                 if self.get_x() == other.get_x() and self.get_y() == other.get_y() and self.get_z() == other.get_z():
@@ -199,7 +200,7 @@ class Vector3():
                         return True
         
         # Reproduce
-        # Takes: self; Vector3 object
+        # Takes: self; Vec3D object
         # Returns: a string dependant upon the user's choice of angle brackets or ijk notation
         def __repr__(self):
                 final_str = ""
@@ -230,6 +231,34 @@ class Vector3():
         def get_z(self):
                 return self.__z
 
+# 3 Dimensional Parametric Vector Class
+# 
+# TODO add more description
+class ParVec3D(Vec3D):
+        def __init__(self, p = (1, 1, 1), d = (1, 1, 1)):
+                super().__init__(p, True)
+                self.__xt = d[0]
+                self.__yt = d[1]
+                self.__zt = d[2]
+                self.__position = d
+        
+        #TODO add rest of methods
+        
+        def get_xt(self):
+                return self.__xt
+        def get_yt(self):
+                return self.__yt
+        def get_zt(self):
+                return self.__zt
+        def get_position(self):
+                return self.__position
+        def get_tmin(self):
+                return self.__tmin
+        def get_tmax(self):
+                return self.__tmax
+        def get_res(self):
+                return self.__res
+        
 # 3 Dimensional axis class
 # Axis for plotting points and vectors in 3 dimensions
 # Handles:
@@ -237,7 +266,7 @@ class Vector3():
 # + Scaling the axis to maximum values
 # + Plotting of points
 # + Plotting of vectors
-class Axis3():
+class Axis3D():
         def __init__(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5), guides = True):
                 self.t = turtle.Turtle()
                 self.s = turtle.Screen()
@@ -256,9 +285,10 @@ class Axis3():
         
         # Draw Axis
         # Draws the 3 dimensional axis, with labels for xyz and their maxima
-        # Takes: Axis3 object
+        # Takes: Axis3D object
         # Returns: None
         def drawaxis(self):
+                self.t.pensize(1)
                 # Draw the y axis
                 self.t.color("#00aa00")
                 self.t.forward(int(self.scale * self.maxm[1][1]))  # y axis maximum
@@ -315,8 +345,8 @@ class Axis3():
                 self.resetpos()
                 
         # Redraw
-        # Redraws the axis, with all the current Vector3s and Point3s
-        # Takes: Vector3 or Point3 object
+        # Redraws the axis, with all the current Vec3Ds and Point3s
+        # Takes: Vec3D or Point3 object
         # Returns: None
         def redraw(self):
                 self.t.clear()
@@ -332,8 +362,10 @@ class Axis3():
                 self.maxm = (xm, ym, zm)
         
         # Plot
-        # Plots a Vector3 or a Point3 on the 3D axis
-        # Takes: Vector3 or Point3 object
+        # Plots a Vec3D or a Point3 on the 3D axis
+        # Takes: 
+        # + self; Axis3D object
+        # + obj; Vec3D or Point3 object
         # Returns: None
         def plot(self, obj = None):
                 if obj not in self.objects:
@@ -361,6 +393,7 @@ class Axis3():
                         self.redraw()
                 if self.guides:
                         self.t.color("#bbbbbb")
+                        self.t.pensize(1)
                 else:
                         self.t.up()
                 # Go to x coordinate
@@ -374,10 +407,11 @@ class Axis3():
                 self.t.forward(self.scale * obj.get_z())
                 if self.guides:
                         self.t.color("#000000")
+                        self.t.pensize(2)
                 else:
                         self.t.down()
-                # Draw arrow if Vector3
-                if type(obj) == type(Vector3()):
+                # Draw arrow if Vec3D
+                if type(obj) == type(Vec3D()):
                         pos = self.t.position()
                         heading = math.degrees(math.atan(pos[1] / pos[0]))
                         # Fixes arrow head direction on positive x (2D) values
@@ -405,27 +439,46 @@ class Axis3():
                         self.t.end_fill()
                 self.resetpos()
         
+        # Parametric Plot
+        # Plots a parametric vector in 3D
+        # Takes: 
+        # + self; Axis3D object
+        # + obj; ParVec3D object
+        # Returns: None
+        def paramplot(self, obj = None, tmin = 0, tmax = 5, res = 0.5):
+                sincos45 = 1.41421356
+                # Goto initial position
+                self.t.up()
+                iy = self.scale * (obj.get_z() - obj.get_x() / sincos45)
+                ix = self.scale * (obj.get_y() - obj.get_x() / sincos45)
+                self.t.goto(int(ix), int(iy))
+                self.t.down()
+                # Plot the rest of the curve
+                t = tmin
+                while t < tmax:
+                        x = ix + self.scale * ((obj.get_zt() * t) - (obj.get_xt() * t) / sincos45)
+                        y = iy + self.scale * ((obj.get_yt() * t) - (obj.get_xt() * t) / sincos45)
+                        self.t.goto(int(x), int(y))
+                        t += res
         # Reset Position
-        # Reset so turtle is at (0, 0), facing positive y axis, and black-colored
+        # Reset so turtle is at (0, 0), facing positive y axis, black-colored, and of size 2px
         # Takes: a Turtle object
         # Returns: None
         def resetpos(self):
+                self.t.pensize(2)
                 self.t.color("#000000")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.setheading(0)
                 self.t.down()
         
-#TODO add parametric vector class (above Axis3())
-
-
-i = Vector3(5,3,1)
-j = Vector3(1,2,3)
+i = Vec3D((1,1,1))
+j = Vec3D((1,2,3))
 k = i.cross(j)
-p = Point3(1,1,1)
-a = Axis3()
+p = ParVec3D((1,1,1),(2,2,3))
+a = Axis3D()
 a.plot(i)
 a.plot(j)
 a.plot(k)
-a.plot(p)
+#a.paramplot(p)
 input()

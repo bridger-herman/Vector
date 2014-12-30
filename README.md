@@ -20,6 +20,9 @@ A project for 3 Dimensional vector operations and visualization, made in Python 
 + Orthogonal
 + Distinct
 
+## Parametric Vectors ##
++ Still heavily under construction, no methods work yet
+
 ## Points ##
 
 ### Available operations include: ###
@@ -28,4 +31,4 @@ A project for 3 Dimensional vector operations and visualization, made in Python 
 ## Visualization (3D) ##
 + Create the 3D axes
 + Set minima and maxima of said axes
-+ Plot points and vectors
++ Plot points, vectors, and parametric vectors
