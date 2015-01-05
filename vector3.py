@@ -5,8 +5,15 @@ import turtle
 # Digital representation of points in space
 # Available operations:
 # + Distance Between Points `p.distance(q)`
-class Point3():
-        def __init__(self, p = (0, 0, 0)):
+class Point3D():
+        # Initializer
+        # Takes:
+        # + self; Point3D object
+        # TODO define more in depth
+        # + p; tuple; coordinates of point
+        def __init__(self, *p):
+                if not p:
+                        p = (1, 1, 1)
                 self.__x = p[0]
                 self.__y = p[1]
                 self.__z = p[2]
@@ -14,7 +21,7 @@ class Point3():
         
         # Distance
         # Determines the distance between two points
-        # Takes: self, other; both Point3 objects
+        # Takes: self, other; both Point3D objects
         # Returns: a scalar value
         def distance(self, other):
                 dx = other.get_x() - self.get_x()
@@ -44,14 +51,20 @@ class Point3():
 # + Angle Between Vectors `u.angle(v)`
 #TODO add description to all initializers
 class Vec3D():
-        def __init__(self, p = (1, 1, 1), mode = True):
+        # Initializer
+        # Takes:
+        # + self; Vec3D object
+        # TODO define more in depth
+        # + p; tuple; coordinates of vector
+        # + mode; boolean; if vector is displayed in angle brackets [True] or ijk notation [False]
+        def __init__(self, *p, mode = True):
+                print("p",p)
+                if not p:
+                       p = (1, 1, 1)
                 self.__x = p[0]
                 self.__y = p[1]
                 self.__z = p[2]
                 self.__values = p
-                # If vector is displayed in angle brackets or ijk notation
-                # True: angle brackets
-                # False: ijk notation
                 self.__mode = mode
         
         # Cross Product
@@ -62,7 +75,7 @@ class Vec3D():
                 new_x = self.get_y() * other.get_z() - self.get_z() * other.get_y()
                 new_y = self.get_z() * other.get_x() - self.get_x() * other.get_z()
                 new_z = self.get_x() * other.get_y() - self.get_y() * other.get_x()
-                return Vec3D((new_x, new_y, new_z), mode = self.get_mode())
+                return Vec3D(new_x, new_y, new_z, mode = self.get_mode())
         
         # Dot Product
         # Performs the dot product self . other
@@ -94,7 +107,7 @@ class Vec3D():
                 nx = self.get_x() - other.get_x()
                 ny = self.get_y() - other.get_y()
                 nz = self.get_z() - other.get_z()
-                return Vec3D((nx, ny, nz))
+                return Vec3D(nx, ny, nz)
         
         # Scalar Multiplication
         # Performs scalar multiplication of self * scalar
@@ -235,12 +248,15 @@ class Vec3D():
 # 
 # TODO add more description
 class ParVec3D(Vec3D):
-        def __init__(self, p = (1, 1, 1), d = (1, 1, 1)):
-                super().__init__(p, True)
-                self.__xt = d[0]
-                self.__yt = d[1]
-                self.__zt = d[2]
-                self.__position = d
+        def __init__(self, *pd):
+                if not pd:
+                        pd = (1, 1, 1, 1, 1, 1)
+                print(pd)
+                super().__init__(pd[:3], True)
+                self.__xt = pd[3]
+                self.__yt = pd[4]
+                self.__zt = pd[5]
+                self.__position = pd[3:]
         
         #TODO add rest of methods
         
@@ -270,7 +286,7 @@ class Axis3D():
         def __init__(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5), guides = True):
                 self.t = turtle.Turtle()
                 self.s = turtle.Screen()
-                self.s.screensize(1920,1040)
+                self.s.screensize(1920, 1040)
                 self.s.title("Vector3D")
                 self.guides = guides
                 self.t.ht()
@@ -345,8 +361,8 @@ class Axis3D():
                 self.resetpos()
                 
         # Redraw
-        # Redraws the axis, with all the current Vec3Ds and Point3s
-        # Takes: Vec3D or Point3 object
+        # Redraws the axis, with all the current Vec3Ds and Point3Ds
+        # Takes: Vec3D or Point3D object
         # Returns: None
         def redraw(self):
                 self.t.clear()
@@ -362,10 +378,10 @@ class Axis3D():
                 self.maxm = (xm, ym, zm)
         
         # Plot
-        # Plots a Vec3D or a Point3 on the 3D axis
+        # Plots a Vec3D or a Point3D on the 3D axis
         # Takes: 
         # + self; Axis3D object
-        # + obj; Vec3D or Point3 object
+        # + obj; Vec3D or Point3D object
         # Returns: None
         def plot(self, obj = None):
                 if obj not in self.objects:
@@ -428,8 +444,8 @@ class Axis3D():
                         self.t.forward(6)
                         self.t.goto(*pos)
                         self.t.goto(0, 0)
-                # Draw circle if Point3
-                elif type(obj) == type(Point3()):
+                # Draw circle if Point3D
+                elif type(obj) == type(Point3D()):
                         self.t.setheading(0)
                         self.t.forward(2)
                         self.t.setheading(90)
@@ -472,13 +488,13 @@ class Axis3D():
                 self.t.setheading(0)
                 self.t.down()
         
-i = Vec3D((1,1,1))
-j = Vec3D((1,2,3))
-k = i.cross(j)
-p = ParVec3D((1,1,1),(2,2,3))
-a = Axis3D()
-a.plot(i)
-a.plot(j)
-a.plot(k)
+#i = Vec3D(1,1,1)
+#j = Vec3D(1,2,3)
+#k = i.cross(j)
+p = ParVec3D(1,1,1,2,2,3)
+#a = Axis3D()
+#a.plot(i)
+#a.plot(j)
+#a.plot(k)
 #a.paramplot(p)
 input()
