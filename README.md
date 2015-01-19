@@ -21,7 +21,13 @@ A project for 3 Dimensional vector operations and visualization, made in Python 
 + Distinct
 
 ## Parametric Vectors ##
-+ Still heavily under construction, no methods work yet
++ Cross (Vector) Product `u.cross(v)`
++ Dot (Scalar) Product `u.dot(v)` (doesn't work yet)
++ Vector Addition `u + v`
++ Vector Subtraction `u - v`
++ Projection `u.proj(v)` (doesn't work yet)
++ Unit Vectors `u.unit()`
++ Angle Between Vectors `u.angle(v)`
 
 ## Points ##
 

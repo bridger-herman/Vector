@@ -9,7 +9,6 @@ class Point3D():
         # Initializer
         # Takes:
         # + self; Point3D object
-        # TODO define more in depth
         # + p; tuple; coordinates of point
         def __init__(self, *p):
                 if not p:
@@ -17,7 +16,7 @@ class Point3D():
                 self.__x = p[0]
                 self.__y = p[1]
                 self.__z = p[2]
-                self.__values = p
+                self.__position = p
         
         # Distance
         # Determines the distance between two points
@@ -30,8 +29,14 @@ class Point3D():
                 dis = (dx ** 2 + dy ** 2 + dz ** 2) ** 0.5
                 return dis
         
-        def get_values(self):
-                return self.__values
+        # Reproduce
+        # Takes: self; Point3D object
+        # Returns: string
+        def __repr__(self):
+                return "(" + self.get_x() + ", " + self.get_y() + ", " + self.get_z() + ")"
+        
+        def get_position(self):
+                return self.__position
         def get_x(self):
                 return self.__x
         def get_y(self):
@@ -49,23 +54,18 @@ class Point3D():
 # + Projection `u.proj(v)`
 # + Unit Vectors `u.unit()`
 # + Angle Between Vectors `u.angle(v)`
-#TODO add description to all initializers
 class Vec3D():
         # Initializer
         # Takes:
         # + self; Vec3D object
-        # TODO define more in depth
         # + p; tuple; coordinates of vector
-        # + mode; boolean; if vector is displayed in angle brackets [True] or ijk notation [False]
-        def __init__(self, *p, mode = True):
-                print("p",p)
+        def __init__(self, *p):
                 if not p:
                        p = (1, 1, 1)
                 self.__x = p[0]
                 self.__y = p[1]
                 self.__z = p[2]
-                self.__values = p
-                self.__mode = mode
+                self.__position = p
         
         # Cross Product
         # Performs the cross product self x other
@@ -75,39 +75,39 @@ class Vec3D():
                 new_x = self.get_y() * other.get_z() - self.get_z() * other.get_y()
                 new_y = self.get_z() * other.get_x() - self.get_x() * other.get_z()
                 new_z = self.get_x() * other.get_y() - self.get_y() * other.get_x()
-                return Vec3D(new_x, new_y, new_z, mode = self.get_mode())
+                return Vec3D(new_x, new_y, new_z)
         
         # Dot Product
         # Performs the dot product self . other
         # Takes: self, other; Vec3D objects
         # Returns: Vec3D object
         def dot(self, other):
-                new_values = []
+                new_position = []
                 i = 0
-                while i < len(self.get_values()):
-                        new_values.append(self.get_values()[i] * other.get_values()[i])
+                while i < len(self.get_position()):
+                        new_position.append(self.get_position()[i] * other.get_position()[i])
                         i += 1
-                return sum(new_values)
+                return sum(new_position)
         
         # Vector Addition
         # Adds self and other
         # Takes: self, other; Vec3D objects
         # Returns: Vec3D object
         def __add__(self, other):
-                nx = self.get_x() + other.get_x()
-                ny = self.get_y() + other.get_y()
-                nz = self.get_z() + other.get_z()
-                return Vec3D((nx, ny, nz))
+                new_x = self.get_x() + other.get_x()
+                new_y = self.get_y() + other.get_y()
+                new_z = self.get_z() + other.get_z()
+                return Vec3D(new_x, new_y, new_z)
 
         # Vector Subtraction
         # Subtracts other from self
         # Takes: self, other; Vec3D objects
         # Returns: Vec3D object
         def __sub__(self, other):
-                nx = self.get_x() - other.get_x()
-                ny = self.get_y() - other.get_y()
-                nz = self.get_z() - other.get_z()
-                return Vec3D(nx, ny, nz)
+                new_x = self.get_x() - other.get_x()
+                new_y = self.get_y() - other.get_y()
+                new_z = self.get_z() - other.get_z()
+                return Vec3D(new_x, new_y, new_z)
         
         # Scalar Multiplication
         # Performs scalar multiplication of self * scalar
@@ -116,10 +116,10 @@ class Vec3D():
         # + scalar; float/int; a scalar value to divide the vector by
         # Returns: Vec3D object
         def __mul__(self, scalar):
-                new_values = []
-                for value in self.get_values():
-                        new_values.append(value * scalar)
-                return Vec3D(new_values, mode = self.get_mode())
+                new_position = []
+                for value in self.get_position():
+                        new_position.append(value * scalar)
+                return Vec3D(*new_position)
                 
         # Scalar True Division
         # Performs scalar true division of self / scalar
@@ -134,15 +134,11 @@ class Vec3D():
         # Gets the magnitude of a vector
         # Takes: 
         # + self; Vec3D object
-        # + fmt; integer; format parameter (whether or not to format the output nicely)
         # Returns: float/int
-        def mag(self, fmt = False):
+        def mag(self):
                 mag_squared = self.get_x() ** 2 + self.get_y() ** 2 + self.get_z() ** 2
                 mag = mag_squared ** 0.5
-                if fmt:
-                        return "sqrt(" + str(mag_squared) + ") ~= " + str(mag)
-                else:
-                        return mag
+                return mag
         
         # Projection
         # Gets the value proj _other_ (self)
@@ -152,7 +148,7 @@ class Vec3D():
                 dot = self.dot(other)
                 mag_2 = other.mag() ** 2
                 vec = other * (dot / mag_2)
-                return Vec3D(vec.get_values())
+                return Vec3D(*vec.get_position())
                 
         # Unit Vector
         # Gets the unit vector of self
@@ -214,29 +210,14 @@ class Vec3D():
         
         # Reproduce
         # Takes: self; Vec3D object
-        # Returns: a string dependant upon the user's choice of angle brackets or ijk notation
+        # Returns: string
         def __repr__(self):
                 final_str = ""
-                if self.get_mode():
-                        final_str = "<" + str(self.get_x()) + ", " + str(self.get_y()) + ", " + str(self.get_z()) + ">"
-                else:
-                        final_str += str(self.get_x()) + "i "
-                        if self.get_y() < 0:
-                                final_str += "- " + str(self.get_y())[1:]
-                        else:
-                                final_str += "+ " + str(self.get_y())
-                        final_str +=  "j "
-                        if self.get_z() < 0:
-                                final_str += "- " + str(self.get_z())[1:]
-                        else:
-                                final_str += "+ " + str(self.get_z())
-                        final_str += "k"
+                final_str = "<" + str(self.get_x()) + ", " + str(self.get_y()) + ", " + str(self.get_z()) + ">"
                 return final_str
                 
-        def get_values(self):
-                return self.__values
-        def get_mode(self):
-                return self.__mode
+        def get_position(self):
+                return self.__position
         def get_x(self):
                 return self.__x
         def get_y(self):
@@ -245,36 +226,164 @@ class Vec3D():
                 return self.__z
 
 # 3 Dimensional Parametric Vector Class
-# 
-# TODO add more description
+# Parametric vectors (vectors including a 't')
 class ParVec3D(Vec3D):
-        def __init__(self, *pd):
-                if not pd:
-                        pd = (1, 1, 1, 1, 1, 1)
-                print(pd)
-                super().__init__(pd[:3], True)
-                self.__xt = pd[3]
-                self.__yt = pd[4]
-                self.__zt = pd[5]
-                self.__position = pd[3:]
+        # Initializer
+        # Takes:
+        # + self; ParVec3D object
+        # + pdt; tuple; coorinates of vector (including position and direction); (x, y, z, xt, yt, zt, (tmin, tmax, resolution))
+        def __init__(self, *pdt):
+                if not pdt:
+                        pdt = (1, 1, 1, 1, 1, 1, (0, 1, 0.5))
+                # TODO add a support class for building each of these classes or modify
+                # TODO includes merging ParVec3D and Vec3D (very eventually)
+                self.__x = pdt[0]
+                self.__y = pdt[1]
+                self.__z = pdt[2]
+                self.__position = pdt[:3]
+                self.__xt = pdt[3]
+                self.__yt = pdt[4]
+                self.__zt = pdt[5]
+                self.__direction = pdt[3:6]
+                self.__tmin = pdt[6][0]
+                self.__tmax = pdt[6][1]
+                self.__res = pdt[6][2]
+                self.__props = pdt[6]
+                
+        # Splits the ParVec3D into two Vec3Ds, one for position, one for direction
+        # Takes: self; ParVec3D object
+        # Returns: tuple containing:
+        # + Position Vec3D object
+        # + Direction Vec3D object
+        def split(self):
+                return(Vec3D(*self.get_position()), Vec3D(*self.get_direction()))
+                
+        # Performs the cross product self x other
+        # Takes:
+        # + self; ParVec3D object
+        # + other; ParVec3D object
+        # Returns:
+        # + ParVec3D object
+        def cross(self, other):
+                self_vectors = self.split()
+                other_vectors = other.split()
+                self_p = self_vectors[0]
+                self_d = self_vectors[1]
+                other_p = other_vectors[0]
+                other_d = other_vectors[1]
+                new_p = self_p.cross(other_p)
+                new_d = self_d.cross(other_d)
+                p_tuple = new_p.get_position()
+                d_tuple = new_d.get_position()
+                pd_list = list(p_tuple + d_tuple)
+                pd_list.append(self.get_props())
+                return ParVec3D(*pd_list)
         
-        #TODO add rest of methods
+        # Performs the dot product self . other
+        # Takes:
+        # + self; ParVec3D object
+        # + other: ParVec3D object
+        # Returns:
+        # + float/int; scalar dot product
+        #TODO verify correctness of method, pretty sure this is not right
+        def dot(self, other):
+                self_vectors = self.split()
+                other_vectors = other.split()
+                self_p = self_vectors[0].get_position()
+                self_d = self_vectors[1].get_position()
+                other_p = other_vectors[0].get_position()
+                other_d = other_vectors[1].get_position()
+                p_total = 0
+                d_total = 0
+                i = 0
+                while i < len(self_p):
+                        p_total += self_p[i] * other_p[i]
+                        d_total += self_d[i] * other_d[i]
+                        i += 1
+                return p_total + d_total
         
+        # Vector Addition
+        # Adds self and other
+        # Takes: self, other; ParVec3D objects
+        # Returns: ParVec3D object
+        def __add__(self, other):
+                new_x = self.get_x() + other.get_x()
+                new_y = self.get_y() + other.get_y()
+                new_z = self.get_z() + other.get_z()
+                new_xt = self.get_xt() + other.get_xt()
+                new_yt = self.get_yt() + other.get_yt()
+                new_zt = self.get_zt() + other.get_zt()
+                return ParVec3D(new_x, new_y, new_z, new_xt, new_yt, new_zt, self.get_props())
+                
+        # Vector Subtraction
+        # Subtracts other from self
+        # Takes: self, other; ParVec3D objects
+        # Returns: ParVec3D object
+        def __sub__(self, other):
+                new_x = self.get_x() - other.get_x()
+                new_y = self.get_y() - other.get_y()
+                new_z = self.get_z() - other.get_z()
+                new_xt = self.get_xt() - other.get_xt()
+                new_yt = self.get_yt() - other.get_yt()
+                new_zt = self.get_zt() - other.get_zt()
+                return ParVec3D(new_x, new_y, new_z, new_xt, new_yt, new_zt, self.get_props())
+        
+        # Vector Projection
+        # Takes: 
+        # + self; ParVec3D object
+        # + other; ParVec3D object
+        # Returns: ParVec3D object
+        # TODO figure out parametric vector projection
+        def proj(self, other):
+                return self
+        
+        # Unit Vector
+        # Finds the unit direction vector of the given parametric vector
+        # Takes:
+        # + self; ParVec3D object
+        # Returns:
+        # + Vec3D object
+        def unit(self):
+                return Vec3D(*self.get_direction()).unit()
+                
+        # Angle
+        # Finds the angle between the direction vector of two parametric vectors
+        # Takes:
+        # + self; ParVec3D object
+        # + other; ParVec3D object
+        # Returns: float/int
+        def angle(self, other):
+                self_d = Vec3D(*self.get_direction())
+                other_d = Vec3D(*other.get_direction())
+                return self_d.angle(other_d, False)
+                
+        # Reproduce
+        # Takes: self; ParVec3D object
+        # Returns: string
+        def __repr__(self):
+                final_str = super().__repr__()
+                final_str += " + <" + str(self.get_xt()) + "t, " + str(self.get_yt()) + "t, " + str(self.get_zt()) + "t>"
+                return final_str
+        
+        def get_x(self):
+                return self.__x
+        def get_y(self):
+                return self.__y
+        def get_z(self):
+                return self.__z
+        def get_position(self):
+                return self.__position
         def get_xt(self):
                 return self.__xt
         def get_yt(self):
                 return self.__yt
         def get_zt(self):
                 return self.__zt
-        def get_position(self):
-                return self.__position
-        def get_tmin(self):
-                return self.__tmin
-        def get_tmax(self):
-                return self.__tmax
-        def get_res(self):
-                return self.__res
-        
+        def get_direction(self):
+               return self.__direction
+        def get_props(self):
+                return self.__props
+       
 # 3 Dimensional axis class
 # Axis for plotting points and vectors in 3 dimensions
 # Handles:
@@ -282,21 +391,29 @@ class ParVec3D(Vec3D):
 # + Scaling the axis to maximum values
 # + Plotting of points
 # + Plotting of vectors
+# + Plotting of parametric vectors
 class Axis3D():
+        # Initializer
+        # Takes:
+        # + self; Axis3D object
+        # + xm; tuple; (xmin, xmax)
+        # + ym; tuple; (ymin, ymax)
+        # + zm; tuple; (zmin, zmax)
+        # + guides; bool; whether or not to display tracing guides on each axis
         def __init__(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5), guides = True):
                 self.t = turtle.Turtle()
                 self.s = turtle.Screen()
-                self.s.screensize(1920, 1040)
+                self.s.screensize(3840, 2560)
                 self.s.title("Vector3D")
                 self.guides = guides
                 self.t.ht()
                 self.t.speed(0)
                 self.objects = []
                 # (Minimum, Maximum) for each axis
-                self.maxm = ((-5, 5), (-5, 5), (-5, 5))
+                self.maxmin = ((-5, 5), (-5, 5), (-5, 5))
                 # Number of pixels per unit
                 self.scale = 40
-                self.setscale(*self.maxm)
+                self.setscale(*self.maxmin)
                 self.drawaxis()
         
         # Draw Axis
@@ -304,60 +421,60 @@ class Axis3D():
         # Takes: Axis3D object
         # Returns: None
         def drawaxis(self):
-                self.t.pensize(1)
+                self.t.pensize(4)
                 # Draw the y axis
                 self.t.color("#00aa00")
-                self.t.forward(int(self.scale * self.maxm[1][1]))  # y axis maximum
+                self.t.forward(int(self.scale * self.maxmin[1][1]))  # y axis maximum
                 self.t.up()
                 self.t.forward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[1][1]) + "  [+y]")
+                self.t.write(str(self.maxmin[1][1]) + "  [y axis]")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
-                self.t.forward(int(self.scale * self.maxm[1][0]))  # y axis minimum
+                self.t.forward(int(self.scale * self.maxmin[1][0]))  # y axis minimum
                 self.t.up()
                 self.t.backward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[1][0]) + "  [-y]")
+                self.t.write(str(self.maxmin[1][0]))
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
                 # Draw the z axis
                 self.t.color("#0000aa")
                 self.t.left(90)
-                self.t.forward(int(self.scale * self.maxm[2][1]))  # z axis maximum
+                self.t.forward(int(self.scale * self.maxmin[2][1]))  # z axis maximum
                 self.t.up()
                 self.t.forward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[2][1]) + "  [+z]")
+                self.t.write(str(self.maxmin[2][1]) + "  [z axis]")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
-                self.t.forward(int(self.scale * self.maxm[2][0]))  # z axis minimum
+                self.t.forward(int(self.scale * self.maxmin[2][0]))  # z axis minimum
                 self.t.up()
                 self.t.backward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[2][0]) + "  [-z]")
+                self.t.write(str(self.maxmin[2][0]))
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
                 # Draw the x axis
                 self.t.color("#aa0000")
                 self.t.right(225)
-                self.t.forward(int(self.scale * self.maxm[0][1]))  # x axis maximum
+                self.t.forward(int(self.scale * self.maxmin[0][1]))  # x axis maximum
                 self.t.up()
                 self.t.forward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[0][1]) + "  [+x]")
+                self.t.write(str(self.maxmin[0][1]) + "  [x axis]")
                 self.t.up()
                 self.t.goto(0, 0)
                 self.t.down()
-                self.t.forward(int(self.scale * self.maxm[0][0]))  # x axis minimum
+                self.t.forward(int(self.scale * self.maxmin[0][0]))  # x axis minimum
                 self.t.up()
                 self.t.backward(self.scale)
                 self.t.down()
-                self.t.write(str(self.maxm[0][0]) + "  [-x]")
+                self.t.write(str(self.maxmin[0][0]))
                 self.resetpos()
                 
         # Redraw
@@ -375,37 +492,48 @@ class Axis3D():
         # Takes: xm, ym, zm; ints; the (minimum, maximum) of each axis
         # Returns: None
         def setscale(self, xm = (-5, 5), ym = (-5, 5), zm = (-5, 5)):
-                self.maxm = (xm, ym, zm)
+                self.maxmin = (xm, ym, zm)
         
         # Plot
         # Plots a Vec3D or a Point3D on the 3D axis
         # Takes: 
         # + self; Axis3D object
         # + obj; Vec3D or Point3D object
+        # + t_param; tuple; (minimum, maximum, resolution)
         # Returns: None
+        # TODO Figure out error in rescaling of axes of negative numbers on the Y axis
         def plot(self, obj = None):
                 if obj not in self.objects:
                         self.objects.append(obj)
-                nmax = []
-                nmin = []
-                vals = obj.get_values()
-                i = 0
-                while i < len(vals):
-                        if vals[i] > self.maxm[i][1]:
-                                nmax.append(vals[i])
-                        else:
-                                nmax.append(self.maxm[i][1])
-                        if vals[i] < self.maxm[i][0]:
-                                nmin.append(vals[i])
-                        else:
-                                nmin.append(self.maxm[i][0])
-                        i += 1
-                nmaxm = []
-                nmaxm.append((nmin[0], nmax[0]))
-                nmaxm.append((nmin[1], nmax[1]))
-                nmaxm.append((nmin[2], nmax[2]))
-                if tuple(nmaxm) != self.maxm:
-                        self.setscale(*nmaxm)
+                new_max = []
+                new_min = []
+                # TODO Figure out a way to do this without creating new objects every time
+                if type(obj) != type(ParVec3D()):
+                        position = obj.get_position()
+                        i = 0
+                        while i < len(position):
+                                if position[i] > self.maxmin[i][1]:
+                                        new_max.append(position[i])
+                                else:
+                                        new_max.append(self.maxmin[i][1])
+                                if position[i] < self.maxmin[i][0]:
+                                        new_min.append(position[i])
+                                else:
+                                        new_min.append(self.maxmin[i][0])
+                                i += 1
+                else:
+                        tmin = obj.get_props()[0]
+                        tmax = obj.get_props()[1]
+                        res = obj.get_props()[2]
+                        direction = obj.get_direction()
+                        [new_max.append(n * tmax) for n in direction]
+                        [new_min.append(n * tmin) for n in direction]
+                new_maxs = []
+                new_maxs.append((new_min[0], new_max[0]))
+                new_maxs.append((new_min[1], new_max[1]))
+                new_maxs.append((new_min[2], new_max[2]))
+                if tuple(new_maxs) != self.maxmin:
+                        self.setscale(*new_maxs)
                         self.redraw()
                 if self.guides:
                         self.t.color("#bbbbbb")
@@ -453,29 +581,30 @@ class Axis3D():
                         self.t.begin_fill()
                         self.t.circle(2)
                         self.t.end_fill()
+                # Draw rest of curve if ParVec3D
+                elif type(obj) == type(ParVec3D()):
+                        SINCOS45 = 1.41421356
+                        xcor = self.scale * (obj.get_z() - (obj.get_x() / SINCOS45))
+                        ycor = self.scale * (obj.get_y() - (obj.get_x() / SINCOS45))
+                        self.t.goto(xcor, ycor)
+                        t_n = tmin
+                        while t_n < tmax:
+                                x = xcor + self.scale * ((obj.get_zt() * t_n) - (obj.get_xt() * t_n) / SINCOS45)
+                                y = ycor + self.scale * ((obj.get_yt() * t_n) - (obj.get_xt() * t_n) / SINCOS45)
+                                print(x, y)
+                                self.t.goto(int(x), int(y))
+                                t_n += res
+                        if self.guides:
+                                self.t.color("#bbbbbb")
+                                self.t.pensize(1)
+                                xy_end = self.scale * ((obj.get_xt() * t_n) / SINCOS45)
+                                self.t.goto(int(x), int(-xy_end))
+                                self.t.goto(int(-xy_end), int(-xy_end))
+                                self.t.goto(0, 0)
+                                self.t.color("#000000")
+                                self.t.pensize(2)
                 self.resetpos()
         
-        # Parametric Plot
-        # Plots a parametric vector in 3D
-        # Takes: 
-        # + self; Axis3D object
-        # + obj; ParVec3D object
-        # Returns: None
-        def paramplot(self, obj = None, tmin = 0, tmax = 5, res = 0.5):
-                sincos45 = 1.41421356
-                # Goto initial position
-                self.t.up()
-                iy = self.scale * (obj.get_z() - obj.get_x() / sincos45)
-                ix = self.scale * (obj.get_y() - obj.get_x() / sincos45)
-                self.t.goto(int(ix), int(iy))
-                self.t.down()
-                # Plot the rest of the curve
-                t = tmin
-                while t < tmax:
-                        x = ix + self.scale * ((obj.get_zt() * t) - (obj.get_xt() * t) / sincos45)
-                        y = iy + self.scale * ((obj.get_yt() * t) - (obj.get_xt() * t) / sincos45)
-                        self.t.goto(int(x), int(y))
-                        t += res
         # Reset Position
         # Reset so turtle is at (0, 0), facing positive y axis, black-colored, and of size 2px
         # Takes: a Turtle object
@@ -487,14 +616,18 @@ class Axis3D():
                 self.t.goto(0, 0)
                 self.t.setheading(0)
                 self.t.down()
-        
-#i = Vec3D(1,1,1)
-#j = Vec3D(1,2,3)
-#k = i.cross(j)
-p = ParVec3D(1,1,1,2,2,3)
-#a = Axis3D()
-#a.plot(i)
-#a.plot(j)
-#a.plot(k)
-#a.paramplot(p)
+
+#param = (0,2,.5)
+#p = ParVec3D(1,1,1,2,2,2,param)
+#q = ParVec3D(1,1,1,2,3,4,param)
+#r = p.cross(q)
+#s = ParVec3D(0,0,0,2,-2,2,param)
+u = Vec3D(1,2,3)
+v = Vec3D(1,1,10)
+x = u.cross(v)
+p = Point3D(-1,-1,-1)
+a = Axis3D()
+a.plot(u)
+a.plot(v)
+a.plot(x)
 input()
