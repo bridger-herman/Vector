@@ -9,8 +9,10 @@
 + Removed paramplot() from Axis3D and merged functionality into plot()
 + Made scale of ParVec3Ds to work correctly(ish)
 + Changed labels on axes
+
 ##In Progress##
 + Adding/Fixing Mathematical methods to parametric vector
 + Changing control of time parameters into ParVec3D instead of Axis3D
+
 ##Future##
 + Attempt to merge ParVec3D and Vec3D into one class, dependant on number of parameters
